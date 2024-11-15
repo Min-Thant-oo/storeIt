@@ -3,6 +3,7 @@ import React from 'react'
 import { Button } from './ui/button'
 import Search from '@/components/Search'
 import FileUploader from '@/components/FileUploader'
+import { signoutUser } from '@/lib/actions/user.actions'
 
 const Header = () => {
   return (
@@ -11,7 +12,11 @@ const Header = () => {
         <div className="header-wrapper">
             <FileUploader />
 
-            <form action="">
+            <form action={async () => {
+                'use server';
+
+                await signoutUser();
+            }}>
                 <Button type='submit' className='sign-out-button'>
                     <Image 
                         src='/assets/icons/logout.svg'

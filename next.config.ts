@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    serverActions: {
+      // Since nextjs payload is only 4MB by default, we can modify it here
+      bodySizeLimit: '100MB',
+    }
+  },
   images: {
     remotePatterns: [
       {

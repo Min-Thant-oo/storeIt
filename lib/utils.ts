@@ -83,13 +83,13 @@ export const formatDateTime = (isoString: string | null | undefined) => {
   // Get hours and adjust for 12-hour format
   let hours = date.getHours();
   const minutes = date.getMinutes();
-  const period = hours >= 12 ? "pm" : "am";
+  const period = hours >= 12 ? "PM" : "AM";
 
   // Convert hours to 12-hour format
   hours = hours % 12 || 12;
 
   // Format the time and date parts
-  const time = `${hours}:${minutes.toString().padStart(2, "0")}${period}`;
+  const time = `${hours}:${minutes.toString().padStart(2, "0")} ${period}`;
   const day = date.getDate();
   const monthNames = [
     "Jan",
@@ -106,8 +106,9 @@ export const formatDateTime = (isoString: string | null | undefined) => {
     "Dec",
   ];
   const month = monthNames[date.getMonth()];
+  const year = date.getFullYear();
 
-  return `${time}, ${day} ${month}`;
+  return `${time}, ${day} ${month} ${year}`;
 };
 
 export const getFileIcon = (

@@ -248,7 +248,7 @@
     @apply flex mt-2 flex-col justify-between sm:flex-row sm:items-center !important;
   }
   .file-list {
-    @apply grid w-full gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 !important;
+    @apply grid w-full gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 !important;
   }
   .sort-container {
     @apply mt-5 flex items-center sm:mt-0 sm:gap-3 !important;

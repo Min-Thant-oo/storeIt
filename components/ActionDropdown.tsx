@@ -24,6 +24,8 @@ import { constructDownloadUrl } from '@/lib/utils'
 import Link from 'next/link'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
+import { renameFile } from '@/lib/actions/file.actions'
+import { usePathname } from 'next/navigation'
   
   
 
@@ -35,6 +37,8 @@ const ActionDropdown = ({ file }: { file: Models.Document}) => {
     const [name, setName] = useState(file.name);
     const [isLoading, setIsLoading] = useState(false);
 
+    const path = usePathname();
+
     const closeAllModals = () => {
         setIsModalOpen(false);
         setIsDropDownOpen(false);
@@ -44,6 +48,19 @@ const ActionDropdown = ({ file }: { file: Models.Document}) => {
     }
 
     const handleAction = async () => {
+        if(!action) return;
+        setIsLoading(true);
+
+        let success = false;
+        const actions = {
+            rename: () => renameFile({ fileId: file.$id, name, extension: file.extension, path }),
+            // share: () => 
+            // delete: () => 
+        };
+
+        success = await actions[action.value as keyof typeof actions]();
+        if(success) closeAllModals();
+        setIsLoading(false);
 
     }
 
@@ -61,13 +78,17 @@ const ActionDropdown = ({ file }: { file: Models.Document}) => {
                             type='text'
                             value={name}
                             onChange={(e) => setName(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleAction()}
                         />
                     )}
                 </DialogHeader>
                 {['rename', 'share', 'delete'].includes(value) && (
                     <DialogFooter className='flex flex-col gap-3 md:flex-row'>
                         <Button onClick={closeAllModals} className='modal-cancel-button'>Cancel</Button>
-                        <Button onClick={handleAction} className='modal-submit-button'>
+                        <Button 
+                            onClick={handleAction} 
+                            className='modal-submit-button'
+                        >
                             <p className="capitalize">{value}</p>
                             {isLoading && (
                                 <Image 

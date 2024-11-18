@@ -6,6 +6,7 @@ import { convertFileSize, formatDateTime } from '@/lib/utils';
 import { Input } from './ui/input';
 import Image from 'next/image';
 import { Button } from './ui/button';
+import { getCurrentUser } from '@/lib/actions/user.actions';
 
 const ImageThumbnail = ({ file }: {file: Models.Document }) => (
   <div className="file-details-thumbnail">
@@ -47,9 +48,11 @@ interface Props {
   file: Models.Document,
   onInputChange: React.Dispatch<React.SetStateAction<string[]>>;
   onRemove: (email: string) => void;
+  currentUserEmail: string;
 }
 
-export const ShareInput = ({ file, onInputChange, onRemove }: Props ) => {
+export const ShareInput = ({ file, onInputChange, onRemove, currentUserEmail }: Props ) => {
+  // const currentUser = await getCurrentUser();
   return (
     <>
       <ImageThumbnail file={file} />
@@ -72,6 +75,7 @@ export const ShareInput = ({ file, onInputChange, onRemove }: Props ) => {
             {file.users.map((email: string) => (
               <li key={email} className="flex items-center justify-between gap-2">
                 <p className="subtitle-2">{email}</p>
+                {currentUserEmail === file.owner.email && (
                 <Button onClick={() => onRemove(email)} className='share-remove-user'>
                   <Image 
                     alt='Remove'
@@ -82,6 +86,7 @@ export const ShareInput = ({ file, onInputChange, onRemove }: Props ) => {
                     title='Remove'
                   />
                 </Button>
+                )}  
               </li>
             ))}
           </ul>

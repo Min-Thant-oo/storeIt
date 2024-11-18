@@ -26,10 +26,8 @@ import { Button } from './ui/button'
 import { renameFile, updateFileUsers } from '@/lib/actions/file.actions'
 import { usePathname } from 'next/navigation'
 import { FileDetails, ShareInput } from './ActionsModalContent'
-  
-  
 
-const ActionDropdown = ({ file }: { file: Models.Document}) => {
+const ActionDropdown = ({ file, currentUserEmail }: { file: Models.Document; currentUserEmail: string}) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDropDownOpen, setIsDropDownOpen] = useState(false);
@@ -107,6 +105,7 @@ const ActionDropdown = ({ file }: { file: Models.Document}) => {
                             file={file} 
                             onInputChange={setEmails}
                             onRemove={handleRemoveUser}
+                            currentUserEmail={currentUserEmail}
                         />
                     }
 

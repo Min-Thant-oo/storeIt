@@ -19,13 +19,19 @@ const page = async ({ params, searchParams }: SearchParamProps) => {
 
     const currentUser = await getCurrentUser();
 
+     // Calculate total size in megabytes
+     const totalSizeInMB = files.documents.reduce((total, file) => {
+        // Assuming file.size is in bytes
+        return total + (file.size || 0);
+    }, 0) / (1024 * 1024);
+
     return (
         <div className='page-container'>
             <section className="w-full">
                 <h1 className="h1 capitalize">{type}</h1>
                 <div className="total-size-section">
                     <p className="body-1">
-                        Total: <span className='h5'>0 Megabyte</span>
+                        Total: <span className='h5'>{totalSizeInMB.toFixed(2)} Megabyte</span>
                     </p>
 
                     <div className="sort-container">

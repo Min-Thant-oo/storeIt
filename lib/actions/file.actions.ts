@@ -77,7 +77,7 @@ const createQueries = (currentUser: Models.Document, types: string[], searchText
     return queries;
 }
 
-export const getFiles = async ({ types = [], searchText = '', sort = '$createdAt-desc', limit}: GetFilesProps) => {
+export const getFiles = async ({ types = [], searchText = '', sort = '$createdAt-asc', limit}: GetFilesProps) => {
     const { databases } = await createAdminClient();
 
     try {

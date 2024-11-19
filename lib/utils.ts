@@ -234,3 +234,11 @@ export const getFileTypesParams = (type: string) => {
       return ["document"];
   }
 };
+
+
+export const calculateTotalSizeInMB = (files: any[]) => {
+  return files.reduce((total, file) => {
+      return total + (file.size || 0);
+  }, 0) / (1024 * 1024);
+}
+  

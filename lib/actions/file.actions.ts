@@ -206,5 +206,5 @@ export async function getTotalSpaceUsed() {
     } catch (error) {
       handleError(error, "Error calculating total space used:, ");
     }
-  }
-  
+}
+

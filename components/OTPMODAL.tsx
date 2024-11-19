@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     AlertDialog,
     AlertDialogAction,
@@ -26,6 +26,27 @@ const OTPMODAL = ({ accountId, email}: { accountId: string; email: string}) => {
     const [isOpen, setIsOpen] = useState(true)
     const [password, setPassword] = useState('')
     const [isLoading, setIsLoading] = useState(false)
+
+    
+//   useEffect(() => {
+//     const verifyOTP = async () => {
+//         // Check if all 6 digits are entered
+//         if (password.length === 6) {
+//             setIsLoading(true);
+//             try {
+//                 const sessionId = await verifySecret({ accountId, password });
+//                 if(sessionId) router.push('/');
+//             } catch (error) {
+//                 console.error("Failed to verify OTP", error)
+//             } finally {
+//                 setIsLoading(false)
+//             }
+//         }
+//     };
+
+//     verifyOTP();
+// }, [password, accountId, router]);
+
 
     const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
@@ -67,9 +88,9 @@ const OTPMODAL = ({ accountId, email}: { accountId: string; email: string}) => {
         </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <InputOTP maxLength={6} value={password} onChange={setPassword}>
+        <InputOTP maxLength={6} value={password} onChange={setPassword} autoFocus>
             <InputOTPGroup className='shad-otp'>
-                <InputOTPSlot index={0} className='shad-otp-slot' />
+                <InputOTPSlot index={0} className='shad-otp-slot'/>
                 <InputOTPSlot index={1} className='shad-otp-slot' />
                 <InputOTPSlot index={2} className='shad-otp-slot' />
                 <InputOTPSlot index={3} className='shad-otp-slot' />

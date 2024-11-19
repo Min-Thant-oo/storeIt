@@ -23,7 +23,7 @@ import { constructDownloadUrl } from '@/lib/utils'
 import Link from 'next/link'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
-import { renameFile, updateFileUsers } from '@/lib/actions/file.actions'
+import { deleteFile, renameFile, updateFileUsers } from '@/lib/actions/file.actions'
 import { usePathname } from 'next/navigation'
 import { FileDetails, ShareInput } from './ActionsModalContent'
 
@@ -53,8 +53,8 @@ const ActionDropdown = ({ file, currentUserEmail }: { file: Models.Document; cur
         let success = false;
         const actions = {
             rename: () => renameFile({ fileId: file.$id, name, extension: file.extension, path }),
-            share: () => updateFileUsers({ fileId: file.$id, emails, path })
-            // delete: () => 
+            share: () => updateFileUsers({ fileId: file.$id, emails, path }),
+            delete: () => deleteFile({ fileId: file.$id, bucketFileId: file.bucketFileId, path })
         };
 
         success = await actions[action.value as keyof typeof actions]();
@@ -100,14 +100,22 @@ const ActionDropdown = ({ file, currentUserEmail }: { file: Models.Document; cur
                     {value === 'details' && <FileDetails file={file} />}
 
                     {/* For Share */}
-                    {value === 'share' && 
+                    {value === 'share' && (
                         <ShareInput 
                             file={file} 
                             onInputChange={setEmails}
                             onRemove={handleRemoveUser}
                             currentUserEmail={currentUserEmail}
                         />
-                    }
+                    )}
+
+                    {/* For Delete */}
+                    {value === 'delete' && (
+                        <p className="delete-confirmation">
+                            Are you sure you want to delete {` `}
+                            <span className="delete-file-name">{file.name}</span>?
+                        </p>
+                    )}
 
                 </DialogHeader>
                 {['rename', 'share', 'delete'].includes(value) && (

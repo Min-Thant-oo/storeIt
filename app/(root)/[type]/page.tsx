@@ -16,6 +16,10 @@ const page = async ({ params, searchParams }: SearchParamProps) => {
     const types = getFileTypesParams(type) as FileType[];
 
     const files = await getFiles({ types, searchText, sort });
+    console.log('Files order:', files.documents.map(file => ({
+        id: file.name,
+        createdAt: file.$createdAt
+    })));
 
     const currentUser = await getCurrentUser();
 
@@ -31,7 +35,7 @@ const page = async ({ params, searchParams }: SearchParamProps) => {
                 <h1 className="h1 capitalize">{type}</h1>
                 <div className="total-size-section">
                     <p className="body-1">
-                        Total: <span className='h5'>{totalSizeInMB.toFixed(2)} Megabyte</span>
+                        Total: <span className='h5'>{totalSizeInMB.toFixed(2)} MB</span>
                     </p>
 
                     <div className="sort-container">

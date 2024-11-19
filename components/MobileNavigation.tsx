@@ -35,7 +35,7 @@ const MobileNavigation = ({ $id: ownerId, accountId, fullName, avatar, email }: 
         alt='logo'
         width={120}
         height={52}
-        className='h-auto'
+        className='h-auto w-auto'
       />
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger>

@@ -77,7 +77,6 @@ const OTPMODAL = ({ accountId, email}: { accountId: string; email: string}) => {
     }
 
     const handleResendOtp = async () => {
-        setIsLoading(true);
         try {
             await sendEmailOTP({ email });
             toast({
@@ -97,9 +96,7 @@ const OTPMODAL = ({ accountId, email}: { accountId: string; email: string}) => {
                 ),
                 className: "error-toast border-none",
             });
-        } finally {
-            setIsLoading(false)
-        }
+        } 
     };
 
   return (

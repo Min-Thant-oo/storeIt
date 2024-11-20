@@ -70,7 +70,7 @@ const AuthForm = ({ type }: { type: FormType}) => {
               <span className="font-semibold">A OTP has been sent to your email!</span>
             </p>
           ),
-          className: "bg-brand !rounded-[10px]",
+          className: "bg-brand !rounded-[10px] border-none",
         });
       } else {
         setErrorMessage('User not found!')

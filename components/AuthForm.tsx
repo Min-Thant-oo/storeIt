@@ -17,6 +17,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { createAccount, signInUser } from '@/lib/actions/user.actions'
 import OTPMODAL from './OTPMODAL'
+import { useToast } from '@/hooks/use-toast';
 
 
 type FormType = "sign-in" | "sign-up";
@@ -33,6 +34,7 @@ const AuthForm = ({ type }: { type: FormType}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [accountId, setAccountId] = useState(null);
+  const { toast } = useToast();
 
   // 1. Define your form.
   const formSchema = authFormSchema(type);
@@ -57,7 +59,22 @@ const AuthForm = ({ type }: { type: FormType}) => {
             })
           : await signInUser({ email: values.email });
           
-      setAccountId(user.accountId);
+      
+      if (user?.accountId) {
+        setAccountId(user.accountId);
+
+        // Toast for successful OTP sent
+        toast({
+          description: (
+            <p className="body-2 text-white">
+              <span className="font-semibold">A OTP has been sent to your email!</span>
+            </p>
+          ),
+          className: "bg-brand !rounded-[10px]",
+        });
+      } else {
+        setErrorMessage('User not found!')
+      }
     } catch (error) {
       setErrorMessage('Failed to create account. Please try again.')
     } finally {

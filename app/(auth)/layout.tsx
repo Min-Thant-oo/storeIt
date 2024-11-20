@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image"
 import { getCurrentUser } from "@/lib/actions/user.actions";
 import { redirect } from "next/navigation";
+import { Toaster } from '@/components/ui/toaster';
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {
     
@@ -48,6 +49,7 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
                 </div>
                 {children}
             </section>
+            <Toaster />
         </div>
     )
 }

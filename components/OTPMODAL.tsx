@@ -19,7 +19,7 @@ import Image from 'next/image';
 import { Button } from './ui/button';
 import { sendEmailOTP, verifySecret } from '@/lib/actions/user.actions';
 import { useRouter } from 'next/navigation';
-
+import { useToast } from '@/hooks/use-toast';
 
 const OTPMODAL = ({ accountId, email}: { accountId: string; email: string}) => {
     const router = useRouter();
@@ -27,6 +27,7 @@ const OTPMODAL = ({ accountId, email}: { accountId: string; email: string}) => {
     const [password, setPassword] = useState('')
     const [isLoading, setIsLoading] = useState(false)
 
+    const { toast } = useToast();
     
 //   useEffect(() => {
 //     const verifyOTP = async () => {
@@ -56,16 +57,49 @@ const OTPMODAL = ({ accountId, email}: { accountId: string; email: string}) => {
             // Call api to verify otp
             const sessionId = await verifySecret({ accountId, password });
             if(sessionId) router.push('/');
+            if(!sessionId) {
+                toast({
+                    description: (
+                      <p className="body-2 text-white">
+                        <span className="font-semibold">Invalid OTP. Please try again.</span> 
+                      </p>
+                    ),
+                    className: "error-toast border-none",
+                });
+                setPassword('');
+            }
         } catch (error) {
             console.error("Failed to verify OTP", error)
-        } 
-        // finally {
+            setPassword('');
+        } finally {
             setIsLoading(false)
-        // }
+        }
     }
 
     const handleResendOtp = async () => {
-        await sendEmailOTP({ email });
+        setIsLoading(true);
+        try {
+            await sendEmailOTP({ email });
+            toast({
+                description: (
+                    <p className="body-2 text-white">
+                        <span className="font-semibold">New OTP has been sent to your email!</span>
+                    </p>
+                ),
+                className: "bg-brand !rounded-[10px] border-none",
+            });
+        } catch (error) {
+            toast({
+                description: (
+                  <p className="body-2 text-white">
+                    <span className="font-semibold">Failed to resend OTP. Please try again.</span> 
+                  </p>
+                ),
+                className: "error-toast border-none",
+            });
+        } finally {
+            setIsLoading(false)
+        }
     };
 
   return (
@@ -102,7 +136,12 @@ const OTPMODAL = ({ accountId, email}: { accountId: string; email: string}) => {
 
         <AlertDialogFooter>
             <div className="flex w-full flex-col gap-4">
-                <AlertDialogAction onClick={handleSubmit} className='shad-submit-btn h-12' type='button'>
+                <AlertDialogAction 
+                    onClick={handleSubmit} 
+                    className='shad-submit-btn h-12' 
+                    type='button' 
+                    disabled={password.length !== 6 || isLoading}
+                >
                     Submit
                     {isLoading && (
                         <Image 
@@ -117,7 +156,13 @@ const OTPMODAL = ({ accountId, email}: { accountId: string; email: string}) => {
 
                 <div className='subtite-2 mt-2 text-center text-light-100'>
                     Didn&apos;t get the code?
-                    <Button type="button" variant="link" className="pl-1 text-brand" onClick={handleResendOtp}>
+                    <Button 
+                        type="button" 
+                        variant="link" 
+                        className="pl-1 text-brand" 
+                        onClick={handleResendOtp}
+                        disabled={isLoading}
+                    >
                         Click here to Resend.
                     </Button>
                 </div>

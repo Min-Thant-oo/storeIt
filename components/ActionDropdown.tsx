@@ -9,12 +9,12 @@ import {
     DialogTitle,
   } from "@/components/ui/dialog"
 import {
-DropdownMenu,
-DropdownMenuContent,
-DropdownMenuItem,
-DropdownMenuLabel,
-DropdownMenuSeparator,
-DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Image from 'next/image'
 import { Models } from 'node-appwrite'
@@ -26,6 +26,8 @@ import { Button } from './ui/button'
 import { deleteFile, renameFile, updateFileUsers } from '@/lib/actions/file.actions'
 import { usePathname } from 'next/navigation'
 import { FileDetails, ShareInput } from './ActionsModalContent'
+import { useToast } from '@/hooks/use-toast';
+
 
 const ActionDropdown = ({ file, currentUserEmail }: { file: Models.Document; currentUserEmail: string}) => {
 
@@ -37,6 +39,9 @@ const ActionDropdown = ({ file, currentUserEmail }: { file: Models.Document; cur
     const [emails, setEmails] = useState<string []>([]);
 
     const path = usePathname();
+
+    const { toast } = useToast();
+
 
     const closeAllModals = () => {
         setIsModalOpen(false);
@@ -60,7 +65,16 @@ const ActionDropdown = ({ file, currentUserEmail }: { file: Models.Document; cur
         success = await actions[action.value as keyof typeof actions]();
         if(success) closeAllModals();
         setIsLoading(false);
+        closeAllModals();
 
+        toast({
+            description: (
+              <p className="body-2 text-white">
+                <span className="font-semibold">{action.label + 'd'}!</span>
+              </p>
+            ),
+            className: "bg-brand !rounded-[10px]",
+          });
     }
 
     const handleRemoveUser = async (email: string) => {
@@ -124,6 +138,7 @@ const ActionDropdown = ({ file, currentUserEmail }: { file: Models.Document; cur
                         <Button 
                             onClick={handleAction} 
                             className='modal-submit-button'
+                            disabled={isLoading}
                         >
                             <p className="capitalize">{value}</p>
                             {isLoading && (
@@ -164,6 +179,8 @@ const ActionDropdown = ({ file, currentUserEmail }: { file: Models.Document; cur
                         setAction(actionItem)
                         if(['rename', 'details', 'share', 'delete'].includes(actionItem.value)) {
                             setIsModalOpen(true)
+                        } else {
+                            setIsDropDownOpen(false)
                         }
                     }}
                 >

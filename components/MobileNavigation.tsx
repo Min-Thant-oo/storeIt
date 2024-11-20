@@ -27,6 +27,15 @@ interface Props {
 
 const MobileNavigation = ({ $id: ownerId, accountId, fullName, avatar, email }: Props) => {
   const [open, setOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleLogout = async () => {
+    setIsLoading(true);
+    await signoutUser();
+    setIsLoading(false);
+    setOpen(false);
+  }
+  
   const pathname = usePathname();
   return (
     <header className='mobile-header'>
@@ -75,7 +84,7 @@ const MobileNavigation = ({ $id: ownerId, accountId, fullName, avatar, email }: 
 
             <div className="flex flex-col justify-between gap-5 pb-5">
               <FileUploader ownerId={ownerId} accountId={accountId} />
-              <Button type='submit' className='mobile-sign-out-button' onClick={async () => await signoutUser}>
+              <Button type='submit' className='mobile-sign-out-button' onClick={handleLogout} disabled={isLoading}>
                 <Image 
                   src='/assets/icons/logout.svg'
                   alt='logo'
@@ -83,6 +92,15 @@ const MobileNavigation = ({ $id: ownerId, accountId, fullName, avatar, email }: 
                   height={24}
                 />
                 <p>Logout</p>
+                {isLoading && (
+                  <Image 
+                    src='/assets/icons/loader.svg'
+                    alt='loader'
+                    width={24}
+                    height={24}
+                    className='animate-spin'
+                  />
+                )}
               </Button>
             </div>
         </SheetContent>

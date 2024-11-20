@@ -52,7 +52,6 @@ interface Props {
 }
 
 export const ShareInput = ({ file, onInputChange, onRemove, currentUserEmail }: Props ) => {
-  // const currentUser = await getCurrentUser();
   return (
     <>
       <ImageThumbnail file={file} />

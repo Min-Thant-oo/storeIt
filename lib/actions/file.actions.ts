@@ -124,25 +124,39 @@ export const renameFile = async ( {fileId, name, extension, path}: RenameFilePro
     }
 }
 
-export const updateFileUsers = async ( {fileId, emails, path}: UpdateFileUsersProps ) => {
+export const updateFileUsers = async ({ fileId, emails, path }: UpdateFileUsersProps) => {
     const { databases } = await createAdminClient();
 
     try {
+        // Step 1: Retrieve the existing document
+        const existingFile = await databases.getDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.filesCollectionId,
+            fileId
+        );
+
+        // Step 2: Merge existing users with new emails
+        const existingUsers = existingFile.users || []; // Ensure it's an array
+        const updatedUsers = [...new Set([...existingUsers, ...emails])]; // Combine and remove duplicates
+
+        // Step 3: Update the document with the merged users
         const updatedFile = await databases.updateDocument(
             appwriteConfig.databaseId,
             appwriteConfig.filesCollectionId,
             fileId,
             {
-                users: emails,
-            },
+                users: updatedUsers,
+            }
         );
 
         revalidatePath(path);
         return parseStringify(updatedFile);
     } catch (error) {
         handleError(error, 'Failed to update file users');
+        return null; 
     }
-}
+};
+
 
 export const deleteFile = async ( {fileId, bucketFileId, path}: DeleteFileProps ) => {
     const { databases, storage } = await createAdminClient();

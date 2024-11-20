@@ -74,7 +74,7 @@ const ActionDropdown = ({ file, currentUserEmail }: { file: Models.Document; cur
               </p>
             ),
             className: "bg-brand !rounded-[10px]",
-          });
+        });
     }
 
     const handleRemoveUser = async (email: string) => {
@@ -86,7 +86,17 @@ const ActionDropdown = ({ file, currentUserEmail }: { file: Models.Document; cur
             path,
         });
         if(success) setEmails(updatedEmails);
+
         closeAllModals();
+        
+        toast({
+            description: (
+              <p className="body-2 text-white">
+                <span className="font-semibold">Removed!</span>
+              </p>
+            ),
+            className: "bg-brand !rounded-[10px]",
+        });
     }
 
     // Modal for each action of dropdown
